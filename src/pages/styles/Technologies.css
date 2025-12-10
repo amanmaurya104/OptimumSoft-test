@@ -152,6 +152,7 @@
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
+  min-height: 100px; /* Ensure container has minimum height */
 }
 
 /* Header */
@@ -514,22 +515,57 @@
     padding: 100px 1.5rem 3rem;
   }
 
+  .technologies-header {
+    margin-bottom: 3rem;
+  }
+
+  .technologies-title {
+    font-size: 2.25rem;
+  }
+
+  .technologies-description {
+    font-size: 1rem;
+  }
+
   .technologies-grid {
     grid-template-columns: 1fr;
     gap: 1.5rem;
   }
 
   .technologies-stats {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .technologies-stat-card {
+    padding: 1.5rem;
+  }
+
+  .technologies-stat-icon {
+    width: 55px;
+    height: 55px;
+  }
+
+  .technologies-stat-value {
+    font-size: 2.25rem;
   }
 
   .technologies-filters {
     gap: 0.75rem;
+    justify-content: center;
   }
 
   .technologies-filter-btn {
     padding: 0.625rem 1.25rem;
     font-size: 0.875rem;
+  }
+
+  .technologies-section-title {
+    font-size: 1.875rem;
+  }
+
+  .technologies-card {
+    padding: 1.75rem;
   }
 }
 
@@ -538,17 +574,200 @@
     padding: 90px 1rem 2rem;
   }
 
+  .technologies-blob-1,
+  .technologies-blob-2,
+  .technologies-blob-3 {
+    width: 300px;
+    height: 300px;
+    filter: blur(60px);
+  }
+
+  /* Ensure content is visible on mobile */
+  .technologies-container {
+    position: relative;
+    z-index: 10;
+  }
+
+  /* Make all content visible by default on mobile */
+  .technologies-header,
+  .technologies-header.scroll-fade-in,
+  .technologies-stats,
+  .technologies-stats.scroll-fade-in,
+  .technologies-filters,
+  .technologies-filters.scroll-fade-in,
+  .technologies-featured,
+  .technologies-featured.scroll-fade-in,
+  .technologies-grid-section,
+  .technologies-grid-section.scroll-fade-in {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+
+  .technologies-card,
+  .technologies-card.scroll-scale {
+    opacity: 1 !important;
+    transform: translateY(0) scale(1) !important;
+  }
+
+  /* Remove transition delays on mobile for instant visibility */
+  .scroll-delay-1,
+  .scroll-delay-2,
+  .scroll-delay-3,
+  .scroll-delay-4,
+  .scroll-delay-5,
+  .scroll-delay-6 {
+    transition-delay: 0s;
+  }
+
+  .technologies-header {
+    margin-bottom: 2.5rem;
+  }
+
+  .technologies-badge {
+    padding: 0.4rem 0.875rem;
+    font-size: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .technologies-title {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .technologies-description {
+    font-size: 0.9375rem;
+    line-height: 1.6;
+  }
+
+  .technologies-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .technologies-stat-card {
+    padding: 1.25rem;
+    gap: 1rem;
+  }
+
+  .technologies-stat-icon {
+    width: 50px;
+    height: 50px;
+  }
+
+  .technologies-stat-value {
+    font-size: 2rem;
+  }
+
+  .technologies-stat-label {
+    font-size: 0.875rem;
+  }
+
+  .technologies-filters {
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    justify-content: center;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .technologies-filters::-webkit-scrollbar {
+    display: none;
+  }
+
+  .technologies-filter-btn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .technologies-section-title {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .technologies-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
   .technologies-card {
-    padding: 1.5rem;
+    padding: 1rem;
   }
 
   .technologies-card-icon {
-    width: 60px;
-    height: 60px;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 0.75rem;
   }
 
   .technologies-card-name {
-    font-size: 1.25rem;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .technologies-card-description {
+    font-size: 0.8125rem;
+    line-height: 1.4;
+    margin-bottom: 0.625rem;
+  }
+
+  .technologies-card-category {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.6875rem;
+    margin-bottom: 0.625rem;
+  }
+
+  .technologies-card-proficiency {
+    font-size: 0.75rem;
+    gap: 0.375rem;
+  }
+
+  .technologies-card-proficiency span {
+    font-size: 0.6875rem;
+  }
+
+  .technologies-stars {
+    gap: 0.125rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .technologies-section {
+    padding: 80px 0.75rem 1.5rem;
+  }
+
+  .technologies-title {
+    font-size: 1.75rem;
+  }
+
+  .technologies-description {
+    font-size: 0.875rem;
+  }
+
+  .technologies-stat-card {
+    padding: 1rem;
+  }
+
+  .technologies-stat-icon {
+    width: 45px;
+    height: 45px;
+  }
+
+  .technologies-stat-value {
+    font-size: 1.75rem;
+  }
+
+  .technologies-card {
+    padding: 1rem;
+  }
+
+  .technologies-card-icon {
+    width: 50px;
+    height: 50px;
   }
 }
 

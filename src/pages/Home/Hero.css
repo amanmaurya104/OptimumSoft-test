@@ -1554,8 +1554,16 @@
     display: none;
   }
 
+  /* Keep particles visible on mobile but with reduced opacity and size */
   .particle {
-    display: none;
+    display: block;
+    opacity: 0.5;
+    width: 3px;
+    height: 3px;
+  }
+
+  .hero-particles {
+    z-index: 1;
   }
 }
 
