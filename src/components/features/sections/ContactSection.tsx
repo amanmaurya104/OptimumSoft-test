@@ -6,10 +6,12 @@ export function ContactSection() {
   const contactSectionRef = useRef<HTMLElement>(null);
   const contactSubtitleRef = useRef<HTMLParagraphElement>(null);
   const contactFormRef = useRef<HTMLDivElement>(null);
+  const contactMapRef = useRef<HTMLDivElement>(null);
   
   const [isContactVisible, setIsContactVisible] = useState(false);
   const [isContactSubtitleVisible, setIsContactSubtitleVisible] = useState(false);
   const [isFormVisible, setIsFormVisible] = useState(false);
+  const [isMapVisible, setIsMapVisible] = useState(false);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -54,6 +56,15 @@ export function ContactSection() {
                 });
               });
             }
+            // Map animation
+            if (entry.target === contactMapRef.current) {
+              setIsMapVisible(false);
+              requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                  setIsMapVisible(true);
+                });
+              });
+            }
           }
         });
       },
@@ -63,11 +74,13 @@ export function ContactSection() {
     if (contactSectionRef.current) observer.observe(contactSectionRef.current);
     if (contactSubtitleRef.current) observer.observe(contactSubtitleRef.current);
     if (contactFormRef.current) observer.observe(contactFormRef.current);
+    if (contactMapRef.current) observer.observe(contactMapRef.current);
 
     return () => {
       if (contactSectionRef.current) observer.unobserve(contactSectionRef.current);
       if (contactSubtitleRef.current) observer.unobserve(contactSubtitleRef.current);
       if (contactFormRef.current) observer.unobserve(contactFormRef.current);
+      if (contactMapRef.current) observer.unobserve(contactMapRef.current);
       observer.disconnect();
     };
   }, []);
@@ -257,6 +270,26 @@ export function ContactSection() {
             )}
           </button>
         </form>
+      </div>
+
+      {/* Google Maps Embed */}
+      <div 
+        ref={contactMapRef}
+        className={`contact-map-container ${isMapVisible ? 'visible' : ''}`}
+      >
+        <div className="contact-map-wrapper">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3685.1234567890123!2d88.4858488!3d22.7191754!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39f8a30be62e4107%3A0x62c5a4441da80da0!2sShyamoli%20yatri%20paribahan!5e0!3m2!1sen!2sin!4v1704567890123!5m2!1sen!2sin"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="OptimumSoft Location - Shyamoli yatri paribahan, Barasat, Kolkata"
+            className="contact-map-iframe"
+          ></iframe>
+        </div>
       </div>
     </div>
   );

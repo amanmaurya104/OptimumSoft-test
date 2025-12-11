@@ -136,13 +136,11 @@ export function Header() {
 
   return (
     <>
-      {isMobileMenuOpen && (
-        <div 
-          className="mobile-menu-overlay"
-          onClick={closeMobileMenu}
-          aria-hidden="true"
-        />
-      )}
+      <div 
+        className={`mobile-menu-overlay ${isMobileMenuOpen ? 'overlay-visible' : ''}`}
+        onClick={closeMobileMenu}
+        aria-hidden={!isMobileMenuOpen}
+      />
       <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
         <div className="header-container">
           <div className="header-logo">

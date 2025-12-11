@@ -1,27 +1,75 @@
 import { useRef, useState, useMemo } from 'react';
 import type { RefObject } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useStaggeredScrollAnimation } from '../../../hooks/useScrollAnimations';
+import { servicesData } from '../../../data/services';
 import '../../../pages/Home/Hero.css';
 
 export function ServicesSection() {
+  const navigate = useNavigate();
   const servicesSectionRef = useRef<HTMLElement>(null);
   const serviceCard1Ref = useRef<HTMLDivElement>(null);
   const serviceCard2Ref = useRef<HTMLDivElement>(null);
   const serviceCard3Ref = useRef<HTMLDivElement>(null);
+  const serviceCard4Ref = useRef<HTMLDivElement>(null);
+  const serviceCard5Ref = useRef<HTMLDivElement>(null);
+  const serviceCard6Ref = useRef<HTMLDivElement>(null);
+  const serviceCard7Ref = useRef<HTMLDivElement>(null);
+  const serviceCard8Ref = useRef<HTMLDivElement>(null);
+  
+  const serviceRefs = [
+    serviceCard1Ref,
+    serviceCard2Ref,
+    serviceCard3Ref,
+    serviceCard4Ref,
+    serviceCard5Ref,
+    serviceCard6Ref,
+    serviceCard7Ref,
+    serviceCard8Ref,
+  ];
   
   const [isServicesVisible, setIsServicesVisible] = useState(false);
   const [isCard1Visible, setIsCard1Visible] = useState(false);
   const [isCard2Visible, setIsCard2Visible] = useState(false);
   const [isCard3Visible, setIsCard3Visible] = useState(false);
+  const [isCard4Visible, setIsCard4Visible] = useState(false);
+  const [isCard5Visible, setIsCard5Visible] = useState(false);
+  const [isCard6Visible, setIsCard6Visible] = useState(false);
+  const [isCard7Visible, setIsCard7Visible] = useState(false);
+  const [isCard8Visible, setIsCard8Visible] = useState(false);
+
+  const cardVisibilities = [
+    isCard1Visible,
+    isCard2Visible,
+    isCard3Visible,
+    isCard4Visible,
+    isCard5Visible,
+    isCard6Visible,
+    isCard7Visible,
+    isCard8Visible,
+  ];
+
+  const setCardVisibilities = [
+    setIsCard1Visible,
+    setIsCard2Visible,
+    setIsCard3Visible,
+    setIsCard4Visible,
+    setIsCard5Visible,
+    setIsCard6Visible,
+    setIsCard7Visible,
+    setIsCard8Visible,
+  ];
 
   const servicesAnimationItems = useMemo(() => [
     { ref: servicesSectionRef, setVisible: setIsServicesVisible, delay: 0 },
-    { ref: serviceCard1Ref, setVisible: setIsCard1Visible, delay: 0 },
-    { ref: serviceCard2Ref, setVisible: setIsCard2Visible, delay: 150 },
-    { ref: serviceCard3Ref, setVisible: setIsCard3Visible, delay: 300 },
+    ...servicesData.map((_, index) => ({
+      ref: serviceRefs[index],
+      setVisible: setCardVisibilities[index],
+      delay: (index + 1) * 100,
+    })),
   ], []);
 
-  useStaggeredScrollAnimation(servicesAnimationItems, 150);
+  useStaggeredScrollAnimation(servicesAnimationItems, 100);
 
   return (
     <div id="services" className="our-services-section">
@@ -32,53 +80,25 @@ export function ServicesSection() {
         Our Services
       </h2>
       <div className="services-grid">
-        <div 
-          ref={serviceCard1Ref}
-          className={`service-card ${isCard1Visible ? 'service-card-visible' : ''}`}
-        >
-          <div className="service-icon">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <rect x="3" y="3" width="18" height="18" rx="2" />
-              <path d="M9 9h6v6H9z" />
-            </svg>
-          </div>
-          <h3 className="service-card-title">Web Development</h3>
-          <p className="service-card-description">
-            Custom web applications built with modern technologies for optimal performance and user experience.
-          </p>
-        </div>
-
-        <div 
-          ref={serviceCard2Ref}
-          className={`service-card ${isCard2Visible ? 'service-card-visible' : ''}`}
-        >
-          <div className="service-icon">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M12 2L2 7l10 5 10-5-10-5z" />
-              <path d="M2 17l10 5 10-5" />
-              <path d="M2 12l10 5 10-5" />
-            </svg>
-          </div>
-          <h3 className="service-card-title">Mobile Apps</h3>
-          <p className="service-card-description">
-            Native and cross-platform mobile applications for iOS and Android with seamless user experience.
-          </p>
-        </div>
-
-        <div 
-          ref={serviceCard3Ref}
-          className={`service-card ${isCard3Visible ? 'service-card-visible' : ''}`}
-        >
-          <div className="service-icon">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-            </svg>
-          </div>
-          <h3 className="service-card-title">Cloud Solutions</h3>
-          <p className="service-card-description">
-            Scalable cloud infrastructure and services to power your business with reliability and efficiency.
-          </p>
-        </div>
+        {servicesData.map((service, index) => {
+          const Icon = service.icon;
+          return (
+            <div 
+              key={service.id}
+              ref={serviceRefs[index]}
+              className={`service-card ${cardVisibilities[index] ? 'service-card-visible' : ''}`}
+              onClick={() => navigate(`/services/${service.id}`)}
+            >
+              <div className="service-icon">
+                <Icon size={40} />
+              </div>
+              <h3 className="service-card-title">{service.title}</h3>
+              <p className="service-card-description">
+                {service.shortDescription}
+              </p>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

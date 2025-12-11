@@ -28,7 +28,13 @@ export function Footer() {
       const element = document.querySelector(path);
       if (element) {
         e.preventDefault();
-        element.scrollIntoView({ behavior: 'smooth' });
+        const headerHeight = 80;
+        const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition - headerHeight;
+        window.scrollTo({ 
+          top: offsetPosition, 
+          behavior: 'smooth' 
+        });
       }
     }
   };

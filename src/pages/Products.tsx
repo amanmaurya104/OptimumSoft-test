@@ -164,7 +164,15 @@ export function Products() {
             <p className="products-cta-text">We can build a tailored product that perfectly fits your business needs</p>
             <button 
               className="products-cta-button"
-              onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => {
+                const contact = document.getElementById('contact');
+                if (contact) {
+                  const headerHeight = 80;
+                  const elementPosition = contact.getBoundingClientRect().top + window.pageYOffset;
+                  const offsetPosition = elementPosition - headerHeight;
+                  window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+                }
+              }}
             >
               Get in Touch
               <ExternalLink size={20} />

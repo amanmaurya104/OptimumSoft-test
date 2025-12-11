@@ -7,6 +7,7 @@ import { AboutPage } from '../pages/About';
 import { ProductsPage } from '../pages/Products';
 import { TechnologiesPage } from '../pages/Technologies';
 import { CareersPage } from '../pages/Careers';
+import { ServiceDetailPage } from '../pages/ServiceDetail';
 
 export interface AppRoute extends Omit<RouteObject, 'path' | 'element'> {
   name: string;
@@ -49,6 +50,11 @@ export const routes: AppRoute[] = [
     path: '/careers',
     name: 'Careers',
     element: <CareersPage />,
+  },
+  {
+    path: '/services/:serviceId',
+    name: 'Service Detail',
+    element: <ServiceDetailPage />,
   },
 ];
 

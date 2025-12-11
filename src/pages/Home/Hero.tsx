@@ -107,14 +107,30 @@ export function Hero() {
           </div>
 
           <div className="hero-buttons" style={{ justifyContent: 'center' }}>
-            <button className="btn-hero-primary" onClick={() => document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })}>
+            <button className="btn-hero-primary" onClick={() => {
+              const contact = document.getElementById('contact');
+              if (contact) {
+                const headerHeight = 80;
+                const elementPosition = contact.getBoundingClientRect().top + window.pageYOffset;
+                const offsetPosition = elementPosition - headerHeight;
+                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+              }
+            }}>
               <span style={{ position: 'relative', zIndex: 10 }}>
                 Get Started Today
               </span>
               <ArrowRight size={20} style={{ position: 'relative', zIndex: 10 }} />
             </button>
             
-            <button className="btn-hero-secondary" onClick={() => document.getElementById('portfolio')?.scrollIntoView({ behavior: 'smooth' })}>
+            <button className="btn-hero-secondary" onClick={() => {
+              const portfolio = document.getElementById('portfolio');
+              if (portfolio) {
+                const headerHeight = 80;
+                const elementPosition = portfolio.getBoundingClientRect().top + window.pageYOffset;
+                const offsetPosition = elementPosition - headerHeight;
+                window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+              }
+            }}>
               View Our Work
             </button>
           </div>

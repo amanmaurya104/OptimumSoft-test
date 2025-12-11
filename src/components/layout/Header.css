@@ -271,20 +271,22 @@
   .header-nav {
     position: fixed;
     top: 0;
-    right: -100%;
+    right: 0;
     width: 75%;
     max-width: 280px;
     height: 100vh;
     background: linear-gradient(180deg, rgba(10, 10, 10, 0.98) 0%, rgba(15, 15, 20, 0.98) 100%);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     box-shadow: -4px 0 30px rgba(0, 0, 0, 0.5);
-    transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transform: translateX(100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     padding: 0;
     overflow-y: auto;
     z-index: 1001;
     display: flex;
     flex-direction: column;
+    will-change: transform;
   }
 
   /* Show mobile-specific elements on mobile */
@@ -373,7 +375,7 @@
   }
 
   .header-nav.nav-open {
-    right: 0;
+    transform: translateX(0);
   }
 
   .nav-list {
@@ -391,12 +393,13 @@
     font-size: 0.9rem;
     border-radius: 8px;
     color: #e2e8f0;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
     display: flex;
     align-items: center;
     gap: 0.875rem;
     position: relative;
     overflow: hidden;
+    will-change: transform;
   }
 
   .nav-item::before {
@@ -420,10 +423,11 @@
     border-radius: 6px;
     background: rgba(102, 126, 234, 0.1);
     color: #667eea;
-    transition: all 0.3s ease;
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
     flex-shrink: 0;
     z-index: 1;
     position: relative;
+    will-change: transform;
   }
 
   .nav-item-text {
@@ -550,21 +554,19 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.6);
   z-index: 1000;
-  animation: fadeIn 0.3s ease;
-  backdrop-filter: blur(2px);
-  -webkit-backdrop-filter: blur(2px);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  will-change: opacity;
+  pointer-events: none;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+.mobile-menu-overlay.overlay-visible {
+  opacity: 1;
+  pointer-events: auto;
 }
+
 
 @media (min-width: 969px) {
   .mobile-menu-overlay {
