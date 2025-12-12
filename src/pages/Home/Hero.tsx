@@ -96,12 +96,12 @@ export function Hero() {
             </span>
           </div>
 
-          <div className="hero-text-wrapper" style={{ textAlign: 'center', width: '100%' }}>
+          <div className="hero-text-wrapper">
             <h1 className="hero-title">
               <span>Transform Your Ideas Into </span>
               <span className="hero-title-gradient">Digital Excellence</span>
             </h1>
-            <p className="hero-description typing-effect" style={{ marginTop: '1.5rem' }}>
+            <p className="hero-description typing-effect">
               {renderTextWithHighlight()}
             </p>
           </div>

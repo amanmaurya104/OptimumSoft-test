@@ -1009,19 +1009,45 @@
   align-items: center;
   max-width: 100%;
   padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+.hero-text-wrapper .hero-title {
+  margin-bottom: 1.5rem;
+}
+
+.hero-text-wrapper .hero-description {
+  margin-top: 1.5rem;
 }
 
 @media (max-width: 768px) {
   .hero-text-wrapper {
-    padding: 0 0.5rem;
+    padding: 0 0.75rem;
     width: 100%;
     box-sizing: border-box;
+  }
+
+  .hero-text-wrapper .hero-title {
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-text-wrapper .hero-description {
+    margin-top: 1.25rem;
   }
 }
 
 @media (max-width: 640px) {
   .hero-text-wrapper {
-    padding: 0 0.25rem;
+    padding: 0 0.5rem;
+    width: 100%;
+  }
+
+  .hero-text-wrapper .hero-title {
+    margin-bottom: 1rem;
+  }
+
+  .hero-text-wrapper .hero-description {
+    margin-top: 1rem;
   }
 }
 
@@ -1052,38 +1078,70 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  white-space: normal;
+  text-align: center;
+  word-wrap: break-word;
+}
+
+@media (max-width: 640px) {
+  .hero-badge {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+    padding: 0.5rem 0.75rem;
+  }
+
+  .hero-badge-text {
+    font-size: 0.75rem;
+    line-height: 1.3;
+  }
 }
 
 /* Hero Title */
 .hero-title {
-  font-size: clamp(3rem, 8vw, 5.5rem);
+  font-size: clamp(2rem, 7vw, 5.5rem);
   font-weight: 600;
-  line-height: 1.05;
+  line-height: 1.2;
   color: #ffffff;
   margin: 0 auto;
-  letter-spacing: -0.04em;
-  white-space: nowrap;
+  letter-spacing: -0.02em;
+  white-space: normal;
   text-align: center;
-  display: inline-block;
-  width: auto;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  padding: 0 1rem;
+  box-sizing: border-box;
 }
 
 .hero-title span {
   display: inline;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 @media (max-width: 768px) {
   .hero-title {
+    font-size: clamp(1.75rem, 6vw, 3rem);
+    line-height: 1.3;
     white-space: normal;
     word-wrap: break-word;
     overflow-wrap: break-word;
     hyphens: auto;
+    padding: 0 0.75rem;
   }
 
   .hero-title span {
     white-space: normal;
     display: inline;
+  }
+
+  .hero-description {
+    font-size: clamp(0.9375rem, 2.5vw, 1.125rem);
+    line-height: 1.5;
+    padding: 0 0.75rem;
   }
 }
 
@@ -1097,8 +1155,8 @@
 
 /* Hero Description */
 .hero-description {
-  font-size: clamp(1.125rem, 2vw, 1.375rem);
-  line-height: 1.7;
+  font-size: clamp(1rem, 3vw, 1.375rem);
+  line-height: 1.6;
   color: #cbd5e1;
   max-width: 100%;
   margin: 0 auto;
@@ -1106,9 +1164,12 @@
   text-align: center;
   display: block;
   font-weight: 400;
-  white-space: nowrap;
+  white-space: normal;
   overflow: visible;
   padding: 0 1rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  box-sizing: border-box;
 }
 
 .typing-effect {
@@ -1425,7 +1486,7 @@
 @media (max-width: 768px) {
   .hero-section {
     padding: 100px 1.5rem 3rem;
-    min-height: 90vh;
+    min-height: auto;
   }
 
   .hero-content {
@@ -1434,6 +1495,7 @@
 
   .hero-left {
     gap: 2rem;
+    width: 100%;
   }
 
   .hero-badge {
@@ -1442,13 +1504,13 @@
   }
 
   .hero-title {
-    font-size: clamp(2rem, 8vw, 3.5rem);
+    font-size: clamp(1.75rem, 6vw, 3rem);
     white-space: normal;
     word-wrap: break-word;
     overflow-wrap: break-word;
-    line-height: 1.2;
+    line-height: 1.3;
     max-width: 100%;
-    padding: 0 0.5rem;
+    padding: 0 0.75rem;
   }
 
   .hero-title span {
@@ -1457,9 +1519,11 @@
   }
 
   .hero-description {
-    font-size: clamp(1rem, 3vw, 1.25rem);
-    min-height: 4em;
+    font-size: clamp(0.9375rem, 2.5vw, 1.125rem);
+    min-height: auto;
     white-space: normal;
+    line-height: 1.5;
+    padding: 0 0.75rem;
   }
 
   .hero-features-grid {
@@ -1505,20 +1569,33 @@
 @media (max-width: 640px) {
   .hero-section {
     padding: 90px 1rem 2rem;
+    min-height: auto;
+  }
+
+  .hero-content {
+    padding: 0 0.5rem;
   }
 
   .hero-left {
     gap: 1.5rem;
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .hero-text-wrapper {
+    width: 100%;
+    padding: 0 0.5rem;
   }
 
   .hero-title {
-    font-size: clamp(1.75rem, 7vw, 2.5rem);
+    font-size: clamp(1.5rem, 6vw, 2.25rem);
     line-height: 1.3;
     white-space: normal;
     word-wrap: break-word;
     overflow-wrap: break-word;
     max-width: 100%;
-    padding: 0 0.25rem;
+    padding: 0 0.5rem;
+    letter-spacing: -0.01em;
   }
 
   .hero-title span {
@@ -1528,8 +1605,11 @@
 
   .hero-description {
     text-align: center;
-    padding: 0;
+    padding: 0 0.5rem;
     white-space: normal;
+    font-size: clamp(0.875rem, 2.5vw, 1rem);
+    line-height: 1.5;
+    min-height: auto;
   }
 
   .hero-features-grid {

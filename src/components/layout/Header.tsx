@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import './Header.css';
-import logo from '../../assets/logo/OPTIMUMSOFT_LOGO.svg';
+import logo from '../../assets/logo/LOGO@2x_WEB_SVG.svg';
 import { Code, Package, Layers, Monitor, Users, Target, Zap, Globe } from '../ui/icons';
 
 export function Header() {
@@ -136,11 +136,11 @@ export function Header() {
 
   return (
     <>
-      <div 
+        <div 
         className={`mobile-menu-overlay ${isMobileMenuOpen ? 'overlay-visible' : ''}`}
-        onClick={closeMobileMenu}
+          onClick={closeMobileMenu}
         aria-hidden={!isMobileMenuOpen}
-      />
+        />
       <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
         <div className="header-container">
           <div className="header-logo">
