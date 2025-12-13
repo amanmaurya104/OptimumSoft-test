@@ -80,25 +80,25 @@ export function ServicesSection() {
         Our Services
       </h2>
       <div className="services-grid">
-        {servicesData.map((service, index) => {
-          const Icon = service.icon;
-          return (
+        {servicesData.map((service, index) => (
             <div 
               key={service.id}
               ref={serviceRefs[index]}
-              className={`service-card ${cardVisibilities[index] ? 'service-card-visible' : ''}`}
+              className={`service-card service-card-with-bg ${cardVisibilities[index] ? 'service-card-visible' : ''}`}
               onClick={() => navigate(`/services/${service.id}`)}
+              style={{
+                backgroundImage: `url(${service.images[0]})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+              }}
             >
-              <div className="service-icon">
-                <Icon size={40} />
-              </div>
               <h3 className="service-card-title">{service.title}</h3>
               <p className="service-card-description">
                 {service.shortDescription}
               </p>
             </div>
-          );
-        })}
+        ))}
       </div>
     </div>
   );

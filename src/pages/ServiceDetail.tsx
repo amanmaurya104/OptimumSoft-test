@@ -13,6 +13,20 @@ export function ServiceDetailPage() {
   const sectionRef = useRef<HTMLElement>(null);
   const { isVisible } = useScrollAnimation({ threshold: 0.1, triggerOnce: true });
 
+  // Refs for each zig-zag section
+  const zigzag1Ref = useRef<HTMLDivElement>(null);
+  const zigzag2Ref = useRef<HTMLDivElement>(null);
+  const zigzag3Ref = useRef<HTMLDivElement>(null);
+  const zigzag4Ref = useRef<HTMLDivElement>(null);
+  const zigzag5Ref = useRef<HTMLDivElement>(null);
+
+  // Visibility states for each section
+  const [isZigzag1Visible, setIsZigzag1Visible] = useState(false);
+  const [isZigzag2Visible, setIsZigzag2Visible] = useState(false);
+  const [isZigzag3Visible, setIsZigzag3Visible] = useState(false);
+  const [isZigzag4Visible, setIsZigzag4Visible] = useState(false);
+  const [isZigzag5Visible, setIsZigzag5Visible] = useState(false);
+
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [isContentVisible, setIsContentVisible] = useState(false);
 
@@ -22,11 +36,58 @@ export function ServiceDetailPage() {
       left: 0,
       behavior: 'smooth'
     });
+    // Reset visibility states when service changes
+    setIsZigzag1Visible(false);
+    setIsZigzag2Visible(false);
+    setIsZigzag3Visible(false);
+    setIsZigzag4Visible(false);
+    setIsZigzag5Visible(false);
     // Ensure content is visible immediately after a short delay
     const timer = setTimeout(() => {
       setIsContentVisible(true);
     }, 100);
     return () => clearTimeout(timer);
+  }, [serviceId]);
+
+  // Intersection Observer for each zig-zag section
+  useEffect(() => {
+    const observers: IntersectionObserver[] = [];
+
+    const createObserver = (
+      ref: React.RefObject<HTMLDivElement | null>,
+      setVisible: React.Dispatch<React.SetStateAction<boolean>>
+    ) => {
+      if (!ref.current) return;
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              setVisible(true);
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        {
+          threshold: 0.2,
+          rootMargin: '0px 0px -50px 0px',
+        }
+      );
+
+      observer.observe(ref.current);
+      observers.push(observer);
+    };
+
+    // Create observers for each zig-zag section
+    createObserver(zigzag1Ref, setIsZigzag1Visible);
+    createObserver(zigzag2Ref, setIsZigzag2Visible);
+    createObserver(zigzag3Ref, setIsZigzag3Visible);
+    createObserver(zigzag4Ref, setIsZigzag4Visible);
+    createObserver(zigzag5Ref, setIsZigzag5Visible);
+
+    return () => {
+      observers.forEach((observer) => observer.disconnect());
+    };
   }, [serviceId]);
 
   if (!service) {
@@ -51,6 +112,13 @@ export function ServiceDetailPage() {
           <div className="service-detail-blob-2"></div>
         </div>
 
+        {/* Animated Particles */}
+        <div className="service-detail-particles">
+          {[...Array(50)].map((_, i) => (
+            <div key={i} className={`particle particle-${i + 1}`}></div>
+          ))}
+        </div>
+
         <div className="service-detail-container">
           <button onClick={() => navigate(-1)} className="service-detail-back-btn">
             <ArrowLeft size={20} /> Back
@@ -66,7 +134,10 @@ export function ServiceDetailPage() {
 
           <div className="service-detail-content">
             {/* Zig-Zag Section 1: Image Left, Description Right */}
-            <div className="zigzag-section zigzag-left">
+            <div 
+              ref={zigzag1Ref}
+              className={`zigzag-section zigzag-left ${isZigzag1Visible ? 'visible' : ''}`}
+            >
               <div className="zigzag-image">
                 <img 
                   src={service.images[0]} 
@@ -84,7 +155,10 @@ export function ServiceDetailPage() {
 
             {/* Zig-Zag Section 2: Features Left, Image Right */}
             {service.features && service.features.length > 0 && (
-              <div className="zigzag-section zigzag-right">
+              <div 
+                ref={zigzag2Ref}
+                className={`zigzag-section zigzag-right ${isZigzag2Visible ? 'visible' : ''}`}
+              >
                 <div className="zigzag-content">
                   <div className="service-detail-features">
                     <h2>Key Features</h2>
@@ -107,7 +181,10 @@ export function ServiceDetailPage() {
 
             {/* Zig-Zag Section 3: Image Left, Benefits Right */}
             {service.benefits && service.benefits.length > 0 && (
-              <div className="zigzag-section zigzag-left">
+              <div 
+                ref={zigzag3Ref}
+                className={`zigzag-section zigzag-left ${isZigzag3Visible ? 'visible' : ''}`}
+              >
                 <div className="zigzag-image">
                   <img 
                     src={service.images[2] || service.images[0]} 
@@ -130,7 +207,10 @@ export function ServiceDetailPage() {
 
             {/* Zig-Zag Section 4: Technologies Left, Image Right */}
             {service.technologies && service.technologies.length > 0 && (
-              <div className="zigzag-section zigzag-right">
+              <div 
+                ref={zigzag4Ref}
+                className={`zigzag-section zigzag-right ${isZigzag4Visible ? 'visible' : ''}`}
+              >
                 <div className="zigzag-content">
                   <div className="service-detail-technologies">
                     <h2>Technologies We Use</h2>
@@ -153,7 +233,10 @@ export function ServiceDetailPage() {
 
             {/* Zig-Zag Section 5: Process Full Width */}
             {service.process && service.process.length > 0 && (
-              <div className="zigzag-section zigzag-full">
+              <div 
+                ref={zigzag5Ref}
+                className={`zigzag-section zigzag-full ${isZigzag5Visible ? 'visible' : ''}`}
+              >
                 <div className="zigzag-content-full">
                   <div className="service-detail-process">
                     <h2>Our Process</h2>

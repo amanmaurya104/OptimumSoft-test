@@ -89,7 +89,7 @@ export const servicesData: ServiceDetail[] = [
   {
     id: 'webdesign-development',
     icon: Globe,
-    title: 'Webdesign & Development',
+    title: 'UI UX Design & Web Development',
     shortDescription: 'Responsive, modern, and SEO-optimized websites that deliver exceptional user experiences.',
     fullDescription: 'We create stunning, responsive websites that not only look great but also perform exceptionally. Our web design and development services combine aesthetic appeal with functionality, ensuring your website stands out in the digital landscape. We focus on user experience, performance, and SEO to help you achieve your business goals.',
     images: [
