@@ -106,7 +106,7 @@ export function ContactSection() {
       formDataToSend.append('message', formData.message);
       formDataToSend.append('_captcha', 'false');
       formDataToSend.append('_subject', 'New Contact Form Submission from OptimumSoft Website');
-      formDataToSend.append('_template', 'box');
+      formDataToSend.append('_template', 'table');
       
       const response = await fetch('https://formsubmit.co/ajax/mouryaaman640@gmail.com', {
         method: 'POST',
@@ -210,7 +210,7 @@ export function ContactSection() {
                 value={formData.phone}
                 onChange={handleFormChange}
                 className="contact-form-input"
-                placeholder="+880 1234 567890"
+                placeholder="+91 98765 43210"
               />
             </div>
 

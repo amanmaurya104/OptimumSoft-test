@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Header } from './components/layout/Header';
+import { WhatsAppButton } from './components/features/WhatsAppButton';
+import { AIChatButton } from './components/features/AIChatButton';
 import { routes } from './config/routes';
 import './styles/App.css';
 
@@ -19,6 +21,8 @@ function App() {
             ))}
           </Routes>
       </main>
+      <WhatsAppButton />
+      <AIChatButton />
     </div>
     </Router>
   );
