@@ -141,7 +141,7 @@ export function Header() {
           onClick={closeMobileMenu}
         aria-hidden={!isMobileMenuOpen}
         />
-      <header className={`header ${isScrolled ? 'scrolled' : ''}`}>
+      <header className={`header ${isScrolled ? 'scrolled' : ''} ${isMobileMenuOpen ? 'menu-open' : ''}`}>
         <div className="header-container">
           <div className="header-logo">
             <Link to="/" className="logo-link">

@@ -20,6 +20,15 @@
   -webkit-backdrop-filter: blur(20px);
 }
 
+/* Make header transparent when menu is open */
+.header.menu-open {
+  background: transparent !important;
+  border-bottom: 1px solid transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: blur(0px) !important;
+  -webkit-backdrop-filter: blur(0px) !important;
+}
+
 .header-container {
   max-width: 1400px;
   margin: 0 auto;
@@ -372,6 +381,7 @@
   padding: 0.5rem;
   z-index: 1002;
   position: relative;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
 }
 
 .mobile-menu-toggle span {
@@ -387,19 +397,11 @@
   background: #e2e8f0;
 }
 
-.mobile-menu-toggle.active span:nth-child(1) {
-  transform: rotate(45deg) translate(7px, 7px);
-  background: #667eea;
-}
-
-.mobile-menu-toggle.active span:nth-child(2) {
+/* Hide hamburger button when menu is open */
+.mobile-menu-toggle.active {
   opacity: 0;
-  transform: translateX(-20px);
-}
-
-.mobile-menu-toggle.active span:nth-child(3) {
-  transform: rotate(-45deg) translate(7px, -7px);
-  background: #667eea;
+  pointer-events: none;
+  visibility: hidden;
 }
 
 /* Tablet and Small Desktop Styles */
@@ -447,8 +449,8 @@
     position: fixed;
     top: 0;
     right: 0;
-    width: 75%;
-    max-width: 280px;
+    width: 65%;
+    max-width: 240px;
     height: 100vh;
     background: linear-gradient(180deg, rgba(10, 10, 10, 0.98) 0%, rgba(15, 15, 20, 0.98) 100%);
     backdrop-filter: blur(10px);
@@ -457,10 +459,13 @@
     transform: translateX(100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     padding: 0;
+    margin: 0;
     overflow-y: auto;
     z-index: 1001;
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
     will-change: transform;
   }
 
@@ -481,13 +486,14 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.25rem 1.25rem 1rem;
+    padding: 1rem 1.25rem;
     border-bottom: 1px solid rgba(102, 126, 234, 0.15);
     background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.05) 100%);
     position: sticky;
     top: 0;
     z-index: 10;
     backdrop-filter: blur(10px);
+    margin-top: 0;
   }
 
   .mobile-nav-title {
@@ -685,12 +691,13 @@
   }
 
   .header-nav {
-    width: 70%;
-    max-width: 260px;
+    width: 60%;
+    max-width: 220px;
   }
 
   .mobile-nav-header {
-    padding: 1rem 1rem 0.875rem;
+    padding: 1rem;
+    margin-top: 0;
   }
 
   .mobile-nav-title-text {
