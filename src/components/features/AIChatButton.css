@@ -317,6 +317,17 @@
   cursor: not-allowed;
 }
 
+.ai-chat-input:read-only {
+  background: #f9fafb;
+  cursor: text;
+  /* Keep focus styles even when read-only */
+}
+
+.ai-chat-input:read-only:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
 .ai-chat-input::placeholder {
   color: #9ca3af;
 }
