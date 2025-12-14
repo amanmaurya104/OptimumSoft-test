@@ -317,6 +317,9 @@
   /* Prevent scroll-into-view behavior that causes jump */
   scroll-margin: 0;
   scroll-padding: 0;
+  /* Prevent touch callout and selection that might cause scroll */
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 
 .ai-chat-input:focus {
@@ -372,18 +375,22 @@
   }
 
   .ai-chat-modal {
-    bottom: 0;
+    bottom: 0 !important;
     right: 0;
     left: 0;
     width: 100%;
-    /* Use top positioning to leave room for keyboard */
-    top: auto;
     /* Height that leaves room for keyboard - adjust as needed */
     height: 80vh;
     max-height: 80vh;
     border-radius: 20px 20px 0 0;
-    /* Smooth transition for height changes */
-    transition: height 0.25s cubic-bezier(0.4, 0, 0.2, 1), max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Smooth transition for height changes - only height, not position */
+    transition: height 0.2s ease-out, max-height 0.2s ease-out;
+    /* Prevent any position changes */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    /* Lock position to prevent movement */
+    position: fixed;
+    will-change: height, max-height;
   }
 
   .ai-chat-messages {
@@ -406,15 +413,21 @@
   }
 
   .ai-chat-modal {
-    bottom: 0;
+    bottom: 0 !important;
     right: 0;
     left: 0;
     border-radius: 20px 20px 0 0;
     /* Smaller height on very small screens to leave more room for keyboard */
     height: 70vh;
     max-height: 70vh;
-    /* Smooth transition for height changes */
-    transition: height 0.25s cubic-bezier(0.4, 0, 0.2, 1), max-height 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Smooth transition for height changes - only height, not position */
+    transition: height 0.2s ease-out, max-height 0.2s ease-out;
+    /* Prevent any position changes */
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    /* Lock position to prevent movement */
+    position: fixed;
+    will-change: height, max-height;
   }
 
   .ai-chat-messages {

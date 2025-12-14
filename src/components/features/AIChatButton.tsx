@@ -40,10 +40,14 @@ export function AIChatButton() {
     if (!isOpen || !modalRef.current) return;
 
     let rafId: number;
+    let timeoutId: ReturnType<typeof setTimeout>;
+    
     const handleResize = () => {
-      // Use requestAnimationFrame for smooth updates
+      // Cancel any pending updates
       if (rafId) cancelAnimationFrame(rafId);
+      if (timeoutId) clearTimeout(timeoutId);
       
+      // Immediate update to prevent jump
       rafId = requestAnimationFrame(() => {
         if (modalRef.current) {
           const viewportHeight = window.visualViewport?.height || window.innerHeight;
@@ -64,8 +68,8 @@ export function AIChatButton() {
             modalRef.current.style.height = `${maxHeight}px`;
           }
           
-          // Scroll to bottom to keep messages visible
-          setTimeout(() => {
+          // Scroll to bottom to keep messages visible (with slight delay)
+          timeoutId = setTimeout(() => {
             scrollToBottom();
           }, 50);
         }
@@ -84,6 +88,7 @@ export function AIChatButton() {
 
     return () => {
       if (rafId) cancelAnimationFrame(rafId);
+      if (timeoutId) clearTimeout(timeoutId);
       if (window.visualViewport) {
         window.visualViewport.removeEventListener('resize', handleResize);
       } else {
@@ -105,42 +110,38 @@ export function AIChatButton() {
   }, [isOpen]);
 
   // Handle input focus - adjust modal smoothly when keyboard opens
-  const handleInputFocus = () => {
-    // Store initial scroll position to prevent jump
-    const initialScrollY = window.scrollY;
+  const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    // Prevent browser's default scroll-into-view behavior
+    e.target.scrollIntoView = () => {};
     
-    // Use requestAnimationFrame for immediate, smooth adjustment
+    // Store initial positions
+    const initialScrollY = window.scrollY;
+    const initialScrollX = window.scrollX;
+    
+    // Immediately adjust height before browser can cause jump
+    if (modalRef.current && window.visualViewport) {
+      const viewportHeight = window.visualViewport.height;
+      const windowHeight = window.innerHeight;
+      
+      // If viewport is smaller, keyboard is likely opening
+      if (viewportHeight < windowHeight * 0.9) {
+        const maxHeight = viewportHeight - 20;
+        modalRef.current.style.maxHeight = `${maxHeight}px`;
+        modalRef.current.style.height = `${maxHeight}px`;
+      }
+    }
+    
+    // Prevent any scroll that might have happened
     requestAnimationFrame(() => {
-      if (modalRef.current) {
-        const viewportHeight = window.visualViewport?.height || window.innerHeight;
-        const windowHeight = window.innerHeight;
-        
-        // Check if keyboard is opening (viewport shrinks)
-        const isKeyboardOpen = viewportHeight < windowHeight * 0.75;
-        
-        if (isKeyboardOpen) {
-          // Adjust immediately when keyboard opens
-          const maxHeight = viewportHeight - 20;
-          modalRef.current.style.maxHeight = `${maxHeight}px`;
-          modalRef.current.style.height = `${maxHeight}px`;
-        }
-        
-        // Prevent page scroll jump
-        if (window.scrollY !== initialScrollY) {
-          window.scrollTo({ top: initialScrollY, behavior: 'auto' });
-        }
-        
-        // Scroll messages to bottom after a brief moment
-        setTimeout(() => {
-          scrollToBottom();
-        }, 100);
+      if (window.scrollY !== initialScrollY || window.scrollX !== initialScrollX) {
+        window.scrollTo({ top: initialScrollY, left: initialScrollX, behavior: 'auto' });
       }
     });
     
-    // Also handle after keyboard animation completes
-    setTimeout(() => {
-      if (modalRef.current) {
-        const viewportHeight = window.visualViewport?.height || window.innerHeight;
+    // Monitor viewport changes and adjust smoothly
+    const checkViewport = () => {
+      if (modalRef.current && window.visualViewport) {
+        const viewportHeight = window.visualViewport.height;
         const windowHeight = window.innerHeight;
         const isKeyboardOpen = viewportHeight < windowHeight * 0.75;
         
@@ -151,7 +152,12 @@ export function AIChatButton() {
           scrollToBottom();
         }
       }
-    }, 250);
+    };
+    
+    // Check immediately and after a short delay
+    checkViewport();
+    setTimeout(checkViewport, 100);
+    setTimeout(checkViewport, 300);
   };
 
   const addBotMessage = (text: string) => {
@@ -388,6 +394,15 @@ export function AIChatButton() {
                 }
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
+                onTouchStart={(e) => {
+                  // Prevent scroll jump before focus
+                  const initialScrollY = window.scrollY;
+                  setTimeout(() => {
+                    if (window.scrollY !== initialScrollY) {
+                      window.scrollTo({ top: initialScrollY, behavior: 'auto' });
+                    }
+                  }, 0);
+                }}
                 onFocus={handleInputFocus}
                 onKeyPress={handleKeyPress}
                 onKeyDown={(e) => {
