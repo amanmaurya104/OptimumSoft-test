@@ -87,15 +87,7 @@ export function AIChatButton() {
     }
   }, [isOpen]);
 
-  useEffect(() => {
-    if (isOpen && inputRef.current && currentStep !== 'complete' && currentStep !== 'submitting') {
-      // Focus input after a short delay to ensure it's ready
-      const timer = setTimeout(() => {
-        inputRef.current?.focus();
-      }, 100);
-      return () => clearTimeout(timer);
-    }
-  }, [isOpen, currentStep, messages]);
+  // Removed auto-focus - keyboard will only open when user clicks input
 
   // Handle input focus to scroll when keyboard opens
   const handleInputFocus = () => {
@@ -116,12 +108,7 @@ export function AIChatButton() {
     setTimeout(() => {
       setMessages((prev) => [...prev, { type: 'bot', text, timestamp: new Date() }]);
       setIsTyping(false);
-      // Refocus input after bot message appears
-      setTimeout(() => {
-        if (inputRef.current && currentStep !== 'complete' && currentStep !== 'submitting') {
-          inputRef.current.focus();
-        }
-      }, 100);
+      // Don't auto-focus - let user click input when ready
     }, 800);
   };
 
@@ -183,8 +170,6 @@ export function AIChatButton() {
         setUserInput('');
         setTimeout(() => {
           askQuestion('email');
-          // Refocus input after question is asked
-          setTimeout(() => inputRef.current?.focus(), 1000);
         }, 1000);
         break;
       case 'email':
@@ -193,7 +178,6 @@ export function AIChatButton() {
         setUserInput('');
         setTimeout(() => {
           askQuestion('phone');
-          setTimeout(() => inputRef.current?.focus(), 1000);
         }, 1000);
         break;
       case 'phone':
@@ -202,7 +186,6 @@ export function AIChatButton() {
         setUserInput('');
         setTimeout(() => {
           askQuestion('message');
-          setTimeout(() => inputRef.current?.focus(), 1000);
         }, 1000);
         break;
       case 'message':
@@ -376,7 +359,6 @@ export function AIChatButton() {
                     ? 'Enter your phone number'
                     : 'Describe your issue or problem'
                 }
-                autoFocus
               />
               <button
                 className="ai-chat-send"
