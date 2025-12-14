@@ -35,67 +35,8 @@ export function AIChatButton() {
     scrollToBottom();
   }, [messages, isTyping]);
 
-  // Handle viewport resize for mobile keyboard
-  useEffect(() => {
-    if (!isOpen || !modalRef.current) return;
-
-    let rafId: number;
-    let timeoutId: ReturnType<typeof setTimeout>;
-    
-    const handleResize = () => {
-      // Cancel any pending updates
-      if (rafId) cancelAnimationFrame(rafId);
-      if (timeoutId) clearTimeout(timeoutId);
-      
-      // Immediate update to prevent jump
-      rafId = requestAnimationFrame(() => {
-        if (modalRef.current) {
-          const viewportHeight = window.visualViewport?.height || window.innerHeight;
-          const windowHeight = window.innerHeight;
-          
-          // Calculate if keyboard is open (viewport is smaller than window)
-          const isKeyboardOpen = viewportHeight < windowHeight * 0.75;
-          
-          if (isKeyboardOpen) {
-            // When keyboard is open, use viewport height minus some padding
-            const maxHeight = viewportHeight - 20;
-            modalRef.current.style.maxHeight = `${maxHeight}px`;
-            modalRef.current.style.height = `${maxHeight}px`;
-          } else {
-            // When keyboard is closed, use default mobile height
-            const maxHeight = Math.min(windowHeight * 0.85, 600);
-            modalRef.current.style.maxHeight = `${maxHeight}px`;
-            modalRef.current.style.height = `${maxHeight}px`;
-          }
-          
-          // Scroll to bottom to keep messages visible (with slight delay)
-          timeoutId = setTimeout(() => {
-            scrollToBottom();
-          }, 50);
-        }
-      });
-    };
-
-    // Use visualViewport API if available (better for mobile keyboards)
-    if (window.visualViewport) {
-      window.visualViewport.addEventListener('resize', handleResize);
-    } else {
-      window.addEventListener('resize', handleResize);
-    }
-
-    // Initial adjustment
-    handleResize();
-
-    return () => {
-      if (rafId) cancelAnimationFrame(rafId);
-      if (timeoutId) clearTimeout(timeoutId);
-      if (window.visualViewport) {
-        window.visualViewport.removeEventListener('resize', handleResize);
-      } else {
-        window.removeEventListener('resize', handleResize);
-      }
-    };
-  }, [isOpen]);
+  // Simplified: No complex viewport handling - let CSS handle the layout
+  // The modal uses fixed height on mobile, so it works reliably
 
   useEffect(() => {
     if (isOpen && currentStep === 'greeting') {
@@ -109,55 +50,12 @@ export function AIChatButton() {
     }
   }, [isOpen]);
 
-  // Handle input focus - adjust modal smoothly when keyboard opens
-  const handleInputFocus = (e: React.FocusEvent<HTMLInputElement>) => {
-    // Prevent browser's default scroll-into-view behavior
-    e.target.scrollIntoView = () => {};
-    
-    // Store initial positions
-    const initialScrollY = window.scrollY;
-    const initialScrollX = window.scrollX;
-    
-    // Immediately adjust height before browser can cause jump
-    if (modalRef.current && window.visualViewport) {
-      const viewportHeight = window.visualViewport.height;
-      const windowHeight = window.innerHeight;
-      
-      // If viewport is smaller, keyboard is likely opening
-      if (viewportHeight < windowHeight * 0.9) {
-        const maxHeight = viewportHeight - 20;
-        modalRef.current.style.maxHeight = `${maxHeight}px`;
-        modalRef.current.style.height = `${maxHeight}px`;
-      }
-    }
-    
-    // Prevent any scroll that might have happened
-    requestAnimationFrame(() => {
-      if (window.scrollY !== initialScrollY || window.scrollX !== initialScrollX) {
-        window.scrollTo({ top: initialScrollY, left: initialScrollX, behavior: 'auto' });
-      }
-    });
-    
-    // Monitor viewport changes and adjust smoothly
-    const checkViewport = () => {
-      if (modalRef.current && window.visualViewport) {
-        const viewportHeight = window.visualViewport.height;
-        const windowHeight = window.innerHeight;
-        const isKeyboardOpen = viewportHeight < windowHeight * 0.75;
-        
-        if (isKeyboardOpen) {
-          const maxHeight = viewportHeight - 20;
-          modalRef.current.style.maxHeight = `${maxHeight}px`;
-          modalRef.current.style.height = `${maxHeight}px`;
-          scrollToBottom();
-        }
-      }
-    };
-    
-    // Check immediately and after a short delay
-    checkViewport();
-    setTimeout(checkViewport, 100);
-    setTimeout(checkViewport, 300);
+  // Simplified focus handler - just scroll messages to bottom
+  const handleInputFocus = () => {
+    // Simple: just ensure messages are scrolled to bottom when input is focused
+    setTimeout(() => {
+      scrollToBottom();
+    }, 200);
   };
 
   const addBotMessage = (text: string) => {
@@ -394,15 +292,6 @@ export function AIChatButton() {
                 }
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
-                onTouchStart={(e) => {
-                  // Prevent scroll jump before focus
-                  const initialScrollY = window.scrollY;
-                  setTimeout(() => {
-                    if (window.scrollY !== initialScrollY) {
-                      window.scrollTo({ top: initialScrollY, behavior: 'auto' });
-                    }
-                  }, 0);
-                }}
                 onFocus={handleInputFocus}
                 onKeyPress={handleKeyPress}
                 onKeyDown={(e) => {
