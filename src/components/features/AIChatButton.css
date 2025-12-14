@@ -157,11 +157,14 @@
 .ai-chat-messages {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
   background: #f8f9fa;
+  min-height: 0;
+  -webkit-overflow-scrolling: touch;
 }
 
 .ai-chat-message {
@@ -357,13 +360,26 @@
   }
 
   .ai-chat-modal {
-    bottom: 90px;
-    right: 20px;
-    left: 20px;
-    width: auto;
-    height: calc(100vh - 120px);
-    max-height: calc(100vh - 120px);
+    bottom: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    /* Use top positioning to leave room for keyboard */
+    top: auto;
+    /* Height that leaves room for keyboard - adjust as needed */
+    height: 80vh;
+    max-height: 80vh;
     border-radius: 20px 20px 0 0;
+  }
+
+  .ai-chat-messages {
+    /* Ensure messages container can shrink when keyboard appears */
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    /* Add bottom padding for better scrolling */
+    padding-bottom: 1rem;
   }
 }
 
@@ -380,12 +396,29 @@
     right: 0;
     left: 0;
     border-radius: 20px 20px 0 0;
-    height: calc(100vh - 80px);
-    max-height: calc(100vh - 80px);
+    /* Smaller height on very small screens to leave more room for keyboard */
+    height: 70vh;
+    max-height: 70vh;
+  }
+
+  .ai-chat-messages {
+    min-height: 0;
+    flex: 1 1 auto;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 1rem;
   }
 
   .ai-chat-message-content {
     max-width: 85%;
+  }
+
+  .ai-chat-input-container {
+    /* Ensure input stays visible above keyboard */
+    flex-shrink: 0;
+    background: #ffffff;
+    position: relative;
+    z-index: 10;
   }
 }
 

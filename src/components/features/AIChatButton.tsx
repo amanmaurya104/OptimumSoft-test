@@ -25,6 +25,7 @@ export function AIChatButton() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const modalRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -33,6 +34,46 @@ export function AIChatButton() {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping]);
+
+  // Handle viewport resize for mobile keyboard
+  useEffect(() => {
+    if (!isOpen || !modalRef.current) return;
+
+    const handleResize = () => {
+      if (modalRef.current) {
+        const viewportHeight = window.visualViewport?.height || window.innerHeight;
+        // Adjust modal height based on available viewport
+        const maxHeight = Math.min(viewportHeight * 0.85, window.innerHeight * 0.85);
+        modalRef.current.style.maxHeight = `${maxHeight}px`;
+        modalRef.current.style.height = `${maxHeight}px`;
+        
+        // Scroll to bottom when keyboard opens to keep messages visible
+        setTimeout(() => {
+          scrollToBottom();
+        }, 100);
+      }
+    };
+
+    // Use visualViewport API if available (better for mobile keyboards)
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', handleResize);
+      window.visualViewport.addEventListener('scroll', handleResize);
+    } else {
+      window.addEventListener('resize', handleResize);
+    }
+
+    // Initial adjustment
+    handleResize();
+
+    return () => {
+      if (window.visualViewport) {
+        window.visualViewport.removeEventListener('resize', handleResize);
+        window.visualViewport.removeEventListener('scroll', handleResize);
+      } else {
+        window.removeEventListener('resize', handleResize);
+      }
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     if (isOpen && currentStep === 'greeting') {
@@ -55,6 +96,20 @@ export function AIChatButton() {
       return () => clearTimeout(timer);
     }
   }, [isOpen, currentStep, messages]);
+
+  // Handle input focus to scroll when keyboard opens
+  const handleInputFocus = () => {
+    // Delay to allow keyboard to open first
+    setTimeout(() => {
+      scrollToBottom();
+      if (modalRef.current) {
+        const viewportHeight = window.visualViewport?.height || window.innerHeight;
+        const maxHeight = Math.min(viewportHeight * 0.85, window.innerHeight * 0.85);
+        modalRef.current.style.maxHeight = `${maxHeight}px`;
+        modalRef.current.style.height = `${maxHeight}px`;
+      }
+    }, 300);
+  };
 
   const addBotMessage = (text: string) => {
     setIsTyping(true);
@@ -236,7 +291,7 @@ export function AIChatButton() {
       </button>
 
       {isOpen && (
-        <div className="ai-chat-modal">
+        <div className="ai-chat-modal" ref={modalRef}>
           <div className="ai-chat-header">
             <div className="ai-chat-header-info">
               <div className="ai-chat-avatar">
@@ -299,6 +354,7 @@ export function AIChatButton() {
                 }
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
+                onFocus={handleInputFocus}
                 onKeyPress={handleKeyPress}
                 onKeyDown={(e) => {
                   // Allow Enter key to submit
