@@ -26,7 +26,6 @@ export function AIChatButton() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
-  const currentStepRef = useRef<ChatStep>('greeting');
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -35,11 +34,6 @@ export function AIChatButton() {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isTyping]);
-
-  // Keep ref in sync with currentStep
-  useEffect(() => {
-    currentStepRef.current = currentStep;
-  }, [currentStep]);
 
   // Handle viewport resize for mobile keyboard
   useEffect(() => {
@@ -93,34 +87,15 @@ export function AIChatButton() {
     }
   }, [isOpen]);
 
-  // Only auto-focus when chat first opens, not on every message change
   useEffect(() => {
-    if (isOpen && inputRef.current && currentStep !== 'complete' && currentStep !== 'submitting' && !isTyping) {
+    if (isOpen && inputRef.current && currentStep !== 'complete' && currentStep !== 'submitting') {
       // Focus input after a short delay to ensure it's ready
       const timer = setTimeout(() => {
-        if (inputRef.current && !inputRef.current.disabled) {
-          inputRef.current.focus();
-        }
+        inputRef.current?.focus();
       }, 100);
       return () => clearTimeout(timer);
     }
-  }, [isOpen, currentStep]); // Removed messages from dependencies to avoid conflicts
-
-  // Maintain focus when typing state changes (input becomes readOnly)
-  useEffect(() => {
-    if (isOpen && inputRef.current && currentStep !== 'complete' && currentStep !== 'submitting') {
-      // When typing finishes, ensure input is focused
-      if (!isTyping) {
-        requestAnimationFrame(() => {
-          setTimeout(() => {
-            if (inputRef.current && !inputRef.current.disabled) {
-              inputRef.current.focus();
-            }
-          }, 100);
-        });
-      }
-    }
-  }, [isTyping, isOpen, currentStep]);
+  }, [isOpen, currentStep, messages]);
 
   // Handle input focus to scroll when keyboard opens
   const handleInputFocus = () => {
@@ -136,54 +111,17 @@ export function AIChatButton() {
     }, 300);
   };
 
-  // Handle input blur - prevent keyboard from closing unless conversation is complete
-  const handleInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    const step: ChatStep = currentStepRef.current;
-    // Only allow blur if conversation is complete or submitting
-    if (step === 'complete' || step === 'submitting') {
-      return;
-    }
-    
-    // Check if the blur is caused by clicking the send button - if so, allow it temporarily
-    const relatedTarget = e.relatedTarget as HTMLElement;
-    if (relatedTarget && relatedTarget.closest('.ai-chat-send')) {
-      // User clicked send button, we'll refocus after handleSubmit
-      return;
-    }
-    
-    // Prevent blur and refocus to keep keyboard open
-    // Use requestAnimationFrame for better timing
-    requestAnimationFrame(() => {
-      setTimeout(() => {
-        const currentStep: ChatStep = currentStepRef.current;
-        if (inputRef.current && 
-            currentStep !== 'complete' && 
-            currentStep !== 'submitting' &&
-            !inputRef.current.disabled) {
-          inputRef.current.focus();
-        }
-      }, 100);
-    });
-  };
-
   const addBotMessage = (text: string) => {
     setIsTyping(true);
     setTimeout(() => {
       setMessages((prev) => [...prev, { type: 'bot', text, timestamp: new Date() }]);
       setIsTyping(false);
-      // Refocus input after bot message appears to keep keyboard open (except when complete)
-      // Use requestAnimationFrame for better timing
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          const step: ChatStep = currentStepRef.current;
-          if (inputRef.current && 
-              step !== 'complete' && 
-              step !== 'submitting' &&
-              !inputRef.current.disabled) {
-            inputRef.current.focus();
-          }
-        }, 300);
-      });
+      // Refocus input after bot message appears
+      setTimeout(() => {
+        if (inputRef.current && currentStep !== 'complete' && currentStep !== 'submitting') {
+          inputRef.current.focus();
+        }
+      }, 100);
     }, 800);
   };
 
@@ -234,75 +172,44 @@ export function AIChatButton() {
   const handleSubmit = async () => {
     if (!validateInput(currentStep, userInput)) {
       addBotMessage("I need a bit more information. Could you please provide a valid response?");
-      // Keep keyboard open by maintaining focus
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          if (inputRef.current && !inputRef.current.disabled) {
-            inputRef.current.focus();
-          }
-        }, 1000);
-      });
       return;
     }
 
     // Save the answer
-    const inputValue = userInput.trim();
-    
     switch (currentStep) {
       case 'name':
-        setFormData((prev) => ({ ...prev, name: inputValue }));
-        addUserMessage(inputValue);
+        setFormData((prev) => ({ ...prev, name: userInput.trim() }));
+        addUserMessage(userInput.trim());
         setUserInput('');
-        // Keep keyboard open - maintain focus immediately using requestAnimationFrame
-        requestAnimationFrame(() => {
-          setTimeout(() => {
-            if (inputRef.current && !inputRef.current.disabled) {
-              inputRef.current.focus();
-            }
-          }, 50);
-        });
         setTimeout(() => {
           askQuestion('email');
+          // Refocus input after question is asked
+          setTimeout(() => inputRef.current?.focus(), 1000);
         }, 1000);
         break;
       case 'email':
-        setFormData((prev) => ({ ...prev, email: inputValue }));
-        addUserMessage(inputValue);
+        setFormData((prev) => ({ ...prev, email: userInput.trim() }));
+        addUserMessage(userInput.trim());
         setUserInput('');
-        // Keep keyboard open
-        requestAnimationFrame(() => {
-          setTimeout(() => {
-            if (inputRef.current && !inputRef.current.disabled) {
-              inputRef.current.focus();
-            }
-          }, 50);
-        });
         setTimeout(() => {
           askQuestion('phone');
+          setTimeout(() => inputRef.current?.focus(), 1000);
         }, 1000);
         break;
       case 'phone':
-        setFormData((prev) => ({ ...prev, phone: inputValue }));
-        addUserMessage(inputValue);
+        setFormData((prev) => ({ ...prev, phone: userInput.trim() }));
+        addUserMessage(userInput.trim());
         setUserInput('');
-        // Keep keyboard open
-        requestAnimationFrame(() => {
-          setTimeout(() => {
-            if (inputRef.current && !inputRef.current.disabled) {
-              inputRef.current.focus();
-            }
-          }, 50);
-        });
         setTimeout(() => {
           askQuestion('message');
+          setTimeout(() => inputRef.current?.focus(), 1000);
         }, 1000);
         break;
       case 'message':
-        const finalMessage = inputValue;
+        const finalMessage = userInput.trim();
         setFormData((prev) => ({ ...prev, message: finalMessage }));
         addUserMessage(finalMessage);
         setUserInput('');
-        // Don't refocus here - let it close after submission
         setTimeout(() => submitForm(finalMessage), 500);
         break;
     }
@@ -339,10 +246,6 @@ export function AIChatButton() {
 
       if (response.ok) {
         setCurrentStep('complete');
-        // Close keyboard when conversation is complete
-        setTimeout(() => {
-          inputRef.current?.blur();
-        }, 500);
       } else {
         throw new Error('Form submission failed');
       }
@@ -350,10 +253,6 @@ export function AIChatButton() {
       console.error('Form submission error:', error);
       addBotMessage("I'm sorry, there was an issue sending your information. Please try again or contact us directly.");
       setCurrentStep('message');
-      // Keep keyboard open if there's an error
-      setTimeout(() => {
-        inputRef.current?.focus();
-      }, 1000);
     } finally {
       setIsSubmitting(false);
     }
@@ -456,7 +355,6 @@ export function AIChatButton() {
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 onFocus={handleInputFocus}
-                onBlur={handleInputBlur}
                 onKeyPress={handleKeyPress}
                 onKeyDown={(e) => {
                   // Allow Enter key to submit
@@ -467,8 +365,7 @@ export function AIChatButton() {
                     }
                   }
                 }}
-                readOnly={isSubmitting || isTyping}
-                disabled={isSubmitting}
+                disabled={isSubmitting || isTyping}
                 autoComplete={currentStep === 'email' ? 'email' : currentStep === 'name' ? 'name' : currentStep === 'phone' ? 'tel' : 'off'}
                 aria-label={
                   currentStep === 'name'
@@ -483,24 +380,7 @@ export function AIChatButton() {
               />
               <button
                 className="ai-chat-send"
-                onClick={(e) => {
-                  e.preventDefault();
-                  // Prevent default blur behavior
-                  e.stopPropagation();
-                  handleSubmit();
-                  // Maintain focus after button click to keep keyboard open
-                  requestAnimationFrame(() => {
-                    setTimeout(() => {
-                      const step: ChatStep = currentStepRef.current;
-                      if (inputRef.current && 
-                          step !== 'complete' && 
-                          step !== 'submitting' &&
-                          !inputRef.current.disabled) {
-                        inputRef.current.focus();
-                      }
-                    }, 150);
-                  });
-                }}
+                onClick={handleSubmit}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
