@@ -24,34 +24,34 @@ interface Value {
 const teamMembers: TeamMember[] = [
   {
     id: 1,
-    name: 'John Smith',
-    role: 'CEO & Founder',
+    name: 'Arpan Dey',
+    role: 'CEO',
     image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=300&fit=crop',
-    bio: 'Visionary leader with 20+ years of experience in software development and business strategy.',
+    bio: 'Visionary leader with extensive experience in software development and business strategy.',
     linkedin: '#'
   },
   {
     id: 2,
-    name: 'Sarah Johnson',
-    role: 'CTO',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&fit=crop',
-    bio: 'Technology expert specializing in cloud architecture and scalable solutions.',
+    name: 'Rinky Shaw',
+    role: 'MD',
+    image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=300&h=300&fit=crop',
+    bio: 'Managing Director driving strategic initiatives and organizational excellence.',
     linkedin: '#'
   },
   {
     id: 3,
-    name: 'Michael Chen',
-    role: 'Head of Design',
+    name: 'Gaurav Kumar Dey',
+    role: 'Finance head',
     image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=300&h=300&fit=crop',
-    bio: 'Creative director passionate about user experience and innovative design solutions.',
+    bio: 'Finance head managing financial operations and strategic financial planning.',
     linkedin: '#'
   },
   {
     id: 4,
-    name: 'Emily Rodriguez',
-    role: 'VP of Engineering',
-    image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop',
-    bio: 'Engineering leader focused on building robust and efficient software systems.',
+    name: 'Abhishek Shrivastav',
+    role: 'Digital head',
+    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop',
+    bio: 'Digital head leading digital transformation and innovative digital solutions.',
     linkedin: '#'
   }
 ];
