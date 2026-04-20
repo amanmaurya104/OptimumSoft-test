@@ -60,14 +60,22 @@ export function ServicesSection() {
     setIsCard8Visible,
   ];
 
+  const visibleServices = useMemo(
+    () =>
+      servicesData.filter(
+        (service) => service.id !== 'loans-insurance' && service.id !== 'event-management'
+      ),
+    []
+  );
+
   const servicesAnimationItems = useMemo(() => [
     { ref: servicesSectionRef, setVisible: setIsServicesVisible, delay: 0 },
-    ...servicesData.map((_, index) => ({
+    ...visibleServices.map((_, index) => ({
       ref: serviceRefs[index],
       setVisible: setCardVisibilities[index],
       delay: (index + 1) * 100,
     })),
-  ], []);
+  ], [visibleServices]);
 
   useStaggeredScrollAnimation(servicesAnimationItems, 100);
 
@@ -80,7 +88,7 @@ export function ServicesSection() {
         Our Services
       </h2>
       <div className="services-grid">
-        {servicesData.map((service, index) => (
+        {visibleServices.map((service, index) => (
             <div 
               key={service.id}
               ref={serviceRefs[index]}
